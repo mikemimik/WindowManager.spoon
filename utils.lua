@@ -64,21 +64,21 @@ return function(ctx)
   local m = {}
 
   function m:findWindow()
-    log.d("finding window...")
+    ctx.log.d("finding window...")
     local win = hs.window.focusedWindow()
-    log.d("window:", win)
+    ctx.log.d("window:", win)
     return win
   end
 
   function m:findNextPosition(win, frame, direction)
-    log.d("finding next position...")
+    ctx.log.d("finding next position...")
     local nextFrame = frame
     local nextIndex = nil
 
     local list = ctx.POSITIONS[win:screen():name()][direction]
     local posIndex = indexOf(list, frame)
-    log.d("posIndex:", posIndex)
-    log.d("list.length:", #list)
+    ctx.log.d("posIndex:", posIndex)
+    ctx.log.d("list.length:", #list)
     if (posIndex == -1 or posIndex == #list) then
       -- NOTE: not in a set position, push to first
       -- NOTE: end of the list, push to first
@@ -87,21 +87,21 @@ return function(ctx)
       nextIndex = posIndex + 1
     end
     nextFrame = list[nextIndex]
-    log.d("nextFrame:", nextFrame)
-    log.d("nextIndex:", nextIndex)
+    ctx.log.d("nextFrame:", nextFrame)
+    ctx.log.d("nextIndex:", nextIndex)
     return nextFrame
   end
 
   function m:findCurrentFrame(win)
-    log.d("finding current frame...")
+    ctx.log.d("finding current frame...")
     local frame = win:frame()
-    log.d("curFrame:", frame)
+    ctx.log.d("curFrame:", frame)
     return frame
   end
 
   function m:shiftWindow(win, pos)
-    log.d("shifting window...")
-    log.d("pos:", pos)
+    ctx.log.d("shifting window...")
+    ctx.log.d("pos:", pos)
     win:setFrame(pos)
     -- TODO: Check if window is off screen (Spotify)
   end
@@ -111,12 +111,12 @@ return function(ctx)
     if (prettyName ~= nil) then
       output = prettyName
     end
-    log.df("handle shift - %s", output)
+    ctx.log.df("handle shift - %s", output)
     local win = self:findWindow()
     local curFrame = self:findCurrentFrame(win)
     local nextFrame = self:findNextPosition(win, curFrame, loc)
     self:shiftWindow(win, nextFrame)
-    log.d("done shift")
+    ctx.log.d("done shift")
   end
 
   return m

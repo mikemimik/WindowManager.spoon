@@ -1,5 +1,3 @@
-local log = hs.logger.new("WindowManager:positions")
-
 return function(ctx)
   local m = {}
 
@@ -7,10 +5,10 @@ return function(ctx)
     local columns = ctx.COLUMNS
     local rows = ctx.ROWS
 
-    log.d("screen:", screen)
-    log.d("frame:", frame)
-    log.d("Columns:", columns)
-    log.d("Rows:", rows)
+    ctx.log.d("screen:", screen)
+    ctx.log.d("frame:", frame)
+    ctx.log.d("Columns:", columns)
+    ctx.log.d("Rows:", rows)
     hs.grid.setGrid(hs.geometry.size(columns, rows), screen, frame)
   end
 
@@ -19,12 +17,12 @@ return function(ctx)
     local columns = ctx.COLUMNS
     local rows = ctx.ROWS
 
-    log.d("screen:", frame)
-    log.d("width:", frame.w)
-    log.d("height:", frame.h)
+    ctx.log.d("screen:", frame)
+    ctx.log.d("width:", frame.w)
+    ctx.log.d("height:", frame.h)
     local colBreak = frame.w / columns
     local halfScreen = frame.w / 2
-    log.d("colBreak:", colBreak)
+    ctx.log.d("colBreak:", colBreak)
     local positions = {
       left = { },
       right = { },
@@ -33,7 +31,7 @@ return function(ctx)
     -----------------------------
     -- Set LEFT position
     -----------------------------
-    log.d("GENERATING LEFT POSITIONS")
+    ctx.log.d("GENERATING LEFT POSITIONS")
     local leftColLimit = (columns / 2) - 1
     for col = 0, leftColLimit do
       local startX = colBreak * col
@@ -88,7 +86,7 @@ return function(ctx)
     -----------------------------
     -- Set RIGHT position
     -----------------------------
-    log.d("GENERATING RIGHT POSITIONS")
+    ctx.log.d("GENERATING RIGHT POSITIONS")
     local rightColLimit = columns / 2
 
     -- col = 2, col = 3
@@ -162,7 +160,7 @@ return function(ctx)
     -----------------------------
     local horizontalCenter = frame.w / 2
     local verticalCenter = (frame.h / 2) + MENU_HEIGHT
-    log.d("coords:", horizontalCenter, verticalCenter)
+    ctx.log.d("coords:", horizontalCenter, verticalCenter)
     local centerPoint = hs.geometry.point(horizontalCenter, verticalCenter)
     positions["center"] = centerPoint
 

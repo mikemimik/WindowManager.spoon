@@ -1,8 +1,8 @@
 --- === WindowManager ===
 ---
-local log = hs.logger.new("WindowManager")
 
 local m = {}
+m.log = hs.logger.new("WindowManager")
 
 m.name = "WindowManager"
 m.version = "1.0.0"
@@ -108,7 +108,7 @@ function m:bindHotKeys(mapping)
     moveCenter = {
       {"cmd", "alt"}, "c",
       function()
-        log.d("handle shift - center")
+        self.log.d("handle shift - center")
         local win = utils:findWindow()
         local screenName = win:screen():name()
         local curFrame = utils:findCurrentFrame(win)
@@ -116,19 +116,19 @@ function m:bindHotKeys(mapping)
         local yAdjusted = m.POSITIONS[screenName]["center"].y - (curFrame.h / 2)
         local centerPosition = hs.geometry.rect(xAdjusted, yAdjusted, curFrame.w, curFrame.h)
         utils:shiftWindow(win, centerPosition)
-        log.d("done shift")
+        self.log.d("done shift")
       end
     },
     moveFull = {
       {"cmd", "alt"}, "f",
       function()
-        log.d("handle shift - full")
+        self.log.d("handle shift - full")
         local win = utils:findWindow()
         local screenName = win:screen():name()
         -- local curFrame = findCurrentFrame(win)
         local fullFrame = m.POSITIONS[screenName]["full"]
         utils:shiftWindow(win, fullFrame)
-        log.d("done shift")
+        self.log.d("done shift")
       end
     },
   }
