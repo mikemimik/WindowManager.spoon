@@ -17,8 +17,6 @@ m.homepage = "https://github.com/mikemimik/WindowManager.spoon"
 --- Returns:
 ---  * self
 function m:init()
-  local positions = dofile(hs.spoons.resourcePath("positions.lua"))(self)
-
   -- Defaults
   hs.window.animationDuration = 0.00
   hs.grid.setMargins(hs.geometry.point(0.0, 0.0))
@@ -26,6 +24,9 @@ function m:init()
   m.ROWS = 2
   m.MENU_HEIGHT = 25.0
   m.POSITIONS = {}
+  m.cache = dofile(hs.spoons.resourcePath("cache.lua"))(self)
+
+  local positions = dofile(hs.spoons.resourcePath("positions.lua"))(self)
 
   local allScreens = hs.screen.allScreens()
 

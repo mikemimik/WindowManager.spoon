@@ -102,6 +102,7 @@ return function(ctx)
   function m:shiftWindow(win, pos)
     ctx.log.d("shifting window...")
     ctx.log.d("pos:", pos)
+    ctx.cache:set(win)
     win:setFrame(pos)
     -- TODO: Check if window is off screen (Spotify)
   end
