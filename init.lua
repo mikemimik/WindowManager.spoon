@@ -81,67 +81,70 @@ end
 function m:bindHotKeys(mapping)
   local utils = dofile(hs.spoons.resourcePath("utils.lua"))(self)
 
+  local tableKeys = {
+   "moveLeft",
+   "moveLeftTop",
+   "moveLeftBottom",
+   "moveRight",
+   "moveRightTop",
+   "moveRightBottom",
+   "moveCenter",
+   "moveFull",
+   "undo",
+  }
+
+  local handlers = {
+    moveLeft = function() utils:moveHandler("left") end,
+    moveLeftTop = function() utils:moveHandler("row0left", "top left") end,
+    moveLeftBottom = function() utils:moveHandler("row1left", "bottom left") end,
+    moveRight = function() utils:moveHandler("right") end,
+    moveRightTop = function() utils:moveHandler("row0right", "top right") end,
+    moveRightBottom = function() utils:moveHandler("row1right", "bottom right") end,
+    moveCenter = function()
+      self.log.d("handle shift - center")
+      local win = utils:findWindow()
+      local screenName = win:screen():name()
+      local curFrame = utils:findCurrentFrame(win)
+      local xAdjusted = m.POSITIONS[screenName]["center"].x - (curFrame.w / 2)
+      local yAdjusted = m.POSITIONS[screenName]["center"].y - (curFrame.h / 2)
+      local centerPosition = hs.geometry.rect(xAdjusted, yAdjusted, curFrame.w, curFrame.h)
+      utils:shiftWindow(win, centerPosition)
+      self.log.d("done shift")
+    end,
+    moveFull = function()
+      self.log.d("handle shift - full")
+      local win = utils:findWindow()
+      local screenName = win:screen():name()
+      -- local curFrame = findCurrentFrame(win)
+      local fullFrame = m.POSITIONS[screenName]["full"]
+      utils:shiftWindow(win, fullFrame)
+      self.log.d("done shift")
+    end,
+    undo = function()
+      local win = utils:findWindow()
+      local prevFrame = self.cache.frames[win:id()];
+      utils:shiftWindow(win, prevFrame)
+      self.log.d("done unshift")
+    end,
+  }
+
   local defaults = {
-    moveLeft = {
-      {"cmd", "alt"}, "left",
-      function() utils:moveHandler("left") end
-    },
-    moveLeftTop = {
-      {"cmd", "ctrl"}, "left",
-      function() utils:moveHandler("row0left", "top left") end
-    },
-    moveLeftBottom = {
-      {"cmd", "ctrl", "shift"}, "left",
-      function() utils:moveHandler("row1left", "bottom left") end
-    },
-    moveRight = {
-      {"cmd", "alt"}, "right",
-      function() utils:moveHandler("right") end
-    },
-    moveRightTop = {
-      {"cmd", "ctrl"}, "right",
-      function() utils:moveHandler("row0right", "top right") end
-    },
-    moveRightBottom = {
-      {"cmd", "ctrl", "shift"}, "right",
-      function() utils:moveHandler("row1right", "bottom right") end
-    },
-    moveCenter = {
-      {"cmd", "alt"}, "c",
-      function()
-        self.log.d("handle shift - center")
-        local win = utils:findWindow()
-        local screenName = win:screen():name()
-        local curFrame = utils:findCurrentFrame(win)
-        local xAdjusted = m.POSITIONS[screenName]["center"].x - (curFrame.w / 2)
-        local yAdjusted = m.POSITIONS[screenName]["center"].y - (curFrame.h / 2)
-        local centerPosition = hs.geometry.rect(xAdjusted, yAdjusted, curFrame.w, curFrame.h)
-        utils:shiftWindow(win, centerPosition)
-        self.log.d("done shift")
-      end
-    },
-    moveFull = {
-      {"cmd", "alt"}, "f",
-      function()
-        self.log.d("handle shift - full")
-        local win = utils:findWindow()
-        local screenName = win:screen():name()
-        -- local curFrame = findCurrentFrame(win)
-        local fullFrame = m.POSITIONS[screenName]["full"]
-        utils:shiftWindow(win, fullFrame)
-        self.log.d("done shift")
-      end
-    },
+    moveLeft = { {"cmd", "alt"}, "left" },
+    moveLeftTop = { {"cmd", "ctrl"}, "left" },
+    moveLeftBottom = { {"cmd", "ctrl", "shift"}, "left" },
+    moveRight = { {"cmd", "alt"}, "right" },
+    moveRightTop = { {"cmd", "ctrl"}, "right" },
+    moveRightBottom = { {"cmd", "ctrl", "shift"}, "right" },
+    moveCenter = { {"cmd", "alt"}, "c" },
+    moveFull = { {"cmd", "alt"}, "f" },
+    undo = { {"cmd", "ctrl"}, "u" },
   }
 
   local merged = {}
 
-  for k,v in pairs(defaults) do
-    merged[k] = v
-  end
-
-  for k,v in pairs(mapping) do
-    merged[k] = v
+  for _,k in pairs(tableKeys) do
+    merged[k] = mapping[k] or defaults[k]
+    table.insert(merged[k], handlers[k])
   end
 
   for _,v in pairs(merged) do
