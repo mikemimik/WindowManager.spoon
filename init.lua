@@ -130,11 +130,11 @@ function m:bindHotKeys(mapping)
 
   local defaults = {
     moveLeft = { {"cmd", "alt"}, "left" },
-    moveLeftTop = { {"cmd", "ctrl"}, "left" },
-    moveLeftBottom = { {"cmd", "ctrl", "shift"}, "left" },
+    moveLeftTop = { {"cmd", "ctrl", "shift"}, "left" },
+    moveLeftBottom = { {"cmd", "ctrl"}, "left" },
     moveRight = { {"cmd", "alt"}, "right" },
-    moveRightTop = { {"cmd", "ctrl"}, "right" },
-    moveRightBottom = { {"cmd", "ctrl", "shift"}, "right" },
+    moveRightTop = { {"cmd", "ctrl", "shift"}, "right" },
+    moveRightBottom = { {"cmd", "ctrl"}, "right" },
     moveCenter = { {"cmd", "alt"}, "c" },
     moveFull = { {"cmd", "alt"}, "f" },
     undo = { {"cmd", "ctrl"}, "u" },
